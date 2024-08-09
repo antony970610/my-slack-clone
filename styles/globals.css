@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: #1a202c; /* Change this to any desired color */
+    color: rgb(178, 56, 56); /* Ensure text color contrasts well with the background */
+  }
+  
+  .sidebar {
+    background-color: #d1d147; /* Darker shade for the sidebar */
+  }
+  
+  .main-content {
+    background-color: #34c046; /* Main content area */
+  }
+  
