@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Realtime chat example using Supabase
 
-## Getting Started
+This is a full-stack Slack clone example using:
 
-First, run the development server:
+- Frontend:
+  - Next.js.
+  - [Supabase.js](https://supabase.com/docs/library/getting-started) for user management and realtime data syncing.
+- Backend:
+  - [supabase.com/dashboard](https://supabase.com/dashboard/): hosted Postgres database with restful API for usage with Supabase.js.
+
+## Deploy your own
+
+### 1. Create new project
+
+Sign up to Supabase - [https://supabase.com/dashboard](https://supabase.com/dashboard) and create a new project. Wait for your database to start.
+
+### 2. Run "Slack Clone" Quickstart
+
+Once your database has started, run the "Slack Clone" quickstart.
+
+![Slack Clone Quick Start](https://user-images.githubusercontent.com/1811651/101558751-73fecc80-3974-11eb-80be-423fa2789877.png)
+
+### 3. Get the URL and Key
+
+Go to the Project Settings (the cog icon), open the API tab, and find your API URL and `anon` key. You'll need these in the next step.
+
+The `anon` key is your client-side API key. It allows "anonymous access" to your database, until the user has logged in. Once they have logged in, the keys will switch to the user's own login token. This enables row level security for your data. Read more about this [below](#postgres-row-level-security).
+
+![image](https://user-images.githubusercontent.com/10214025/88916245-528c2680-d298-11ea-8a71-708f93e1ce4f.png)
+
+**_NOTE_**: The `service_role` key has full access to your data, bypassing any security policies. These keys have to be kept secret and are meant to be used in server environments and never on a client or browser.
+
+### 4. Deploy the Next.js client
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fsupabase%2Fsupabase%2Ftree%2Fmaster%2Fexamples%2Fslack-clone%2Fnextjs-slack-clone&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY&envDescription=Find%20the%20Supabase%20URL%20and%20key%20in%20the%20your%20auto-generated%20docs%20at%20supabase.com/dashboard&project-name=supabase-slack-clone&repo-name=supabase-slack-clone)
+
+Here, we recommend forking this repo so you can deploy through Vercel by clicking the button above. When you click the button, replace the repo URL with your fork's URL.
+
+You will be asked for a `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Use the API URL and `anon` key from [step 3](#3-get-the-url-and-key).
+
+### 5. Change authentication settings if necessary
+
+![Change auth settings](https://user-images.githubusercontent.com/1811651/101840012-39be3800-3af8-11eb-8c32-73f2fae6299e.png)
+
+On [supabase.com/dashboard](https://supabase.com/dashboard), you can go to Authentication -> Settings to change your auth settings for your project if necessary. Here, you can change the site URL, which is used for determining where to redirect users after they confirm their email addresses or attempt to use a magic link to log in.
+
+Here, you can also enable external oauth providers, such as Google and GitHub.
+
+## How to use
+
+### Using this repo
+
+Simply clone this repo locally and proceed to the next section.
+
+### Required configuration
+
+Copy the `.env.example` file into a file named `.env.local` in the root directory of the example:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set your Supabase details from [step 3](#3-get-the-url-and-key) above:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=<replace-with-your-API-url>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<replace-with-your-anon-key>
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Change authentication settings if necessary
 
-## Learn More
+Follow [Step #5](#5-change-authentication-settings-if-necessary) above if you want to change the auth settings.
 
-To learn more about Next.js, take a look at the following resources:
+### Run the development server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Now install the dependencies and start the development server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
 
-## Deploy on Vercel
+Visit http://localhost:3000 and start chatting! Open a channel across two browser tabs to see everything getting updated in realtime 🥳
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Postgres Row level security
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project uses very high-level Authorization using Postgres' Row Level Security.
+When you start a Postgres database on Supabase, we populate it with an `auth` schema, and some helper functions.
+When a user logs in, they are issued a JWT with the role `authenticated` and their UUID.
+We can use these details to provide fine-grained control over what each user can and cannot do.
+
+- For the full schema refer to [full-schema.sql](./full-schema.sql).
+- For documentation on Role-based Access Control, refer to the [docs](https://supabase.com/docs/guides/auth/custom-claims-and-role-based-access-control-rbac).
+
+## Authors
+
+- [Supabase](https://supabase.com)
+
+Supabase is open source, we'd love for you to follow along and get involved at https://github.com/supabase/supabase
