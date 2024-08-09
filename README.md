@@ -96,3 +96,14 @@ We can use these details to provide fine-grained control over what each user can
 - [Supabase](https://supabase.com)
 
 Supabase is open source, we'd love for you to follow along and get involved at https://github.com/supabase/supabase
+
+
+
+!!!!!!!
+**Remaining Functions**
+Logout Function 
+Chate area to stick at the bottom
+Pretty UI
+Security
+
+
